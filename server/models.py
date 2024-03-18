@@ -30,7 +30,7 @@ class Planet(db.Model, SerializerMixin):
     mission = db.relationship('Mission', backref=db.backref('planet', uselist=False))
 
     #add relationship planet can have many scientists through missions
-    scientist = db.relationship('Scientist', secondary='missions')
+    scientists = db.relationship('Scientist', secondary='missions')
 
 
     # Add serialization rules
@@ -75,12 +75,12 @@ class Mission(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     planet_id = db.Column(db.Integer, db.ForeignKey('planets.id', ondelete='CASCADE'))
-    scientist_id = db.Column(db.Integer, db.ForeignKey('scientist.id', ondelete='CASCADE'))
+    scientist_id = db.Column(db.Integer, db.ForeignKey('scientists.id', ondelete='CASCADE'))
 
      # Add relationships
                              
     planet = db.relationship('Planet', backref='missions')
-    scientist = db.relationship('Scientist', backref='missions')
+    scientists = db.relationship('Scientist', backref='missions')
 
    
     # Add serialization rules
