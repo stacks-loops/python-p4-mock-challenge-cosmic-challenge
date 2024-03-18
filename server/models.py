@@ -34,6 +34,13 @@ class Planet(db.Model, SerializerMixin):
 
 
     # Add serialization rules
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'distance_from_earth': self.distance_from_earth,
+            'nearest_star': self.nearest_star
+        }
 
 
 class Scientist(db.Model, SerializerMixin):
@@ -51,6 +58,13 @@ class Scientist(db.Model, SerializerMixin):
     missions = db.relationship('Mission', secondary='missions')
 
     # Add serialization rules
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'field_of_study': self.field_of_study,
+            'planet_id': self.planet_id
+        }
 
     # Add validation
 
@@ -60,17 +74,23 @@ class Mission(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
-    planet_id = db.Column(db.Integer, db.ForeignKey('planets.id'))
-    scientist_id = db.Column(db.Integer, db.ForeignKey('scientists.id'))
-    
-     # Add relationships
+    planet_id = db.Column(db.Integer, db.ForeignKey('planets.id', ondelete='CASCADE'))
+    scientist_id = db.Column(db.Integer, db.ForeignKey('scientist.id', ondelete='CASCADE'))
 
+     # Add relationships
                              
     planet = db.relationship('Planet', backref='missions')
-    scientists = db.relationship('Scientist', backref='missions')
+    scientist = db.relationship('Scientist', backref='missions')
 
    
     # Add serialization rules
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'planet_id': self.planet_id,
+            'scientists_id': self.scientist_id
+    }
 
     # Add validation
 
